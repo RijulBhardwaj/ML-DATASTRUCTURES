@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP Status Code Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .response { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>HTTP Status Code Demo</h1>
+    <button onclick="makeRequest(200)">Simulate 200 OK</button>
+    <button onclick="makeRequest(400)">Simulate 400 Bad Request</button>
+    <button onclick="makeRequest(404)">Simulate 404 Not Found</button>
+    <button onclick="makeRequest(500)">Simulate 500 Internal Server Error</button>
+    
+    <div id="response" class="response"></div>
+
+    <script>
+        function makeRequest(statusCode) {
+            // Clear the previous response
+            const responseDiv = document.getElementById('response');
+            responseDiv.innerHTML = '';
+            responseDiv.className = 'response';
+
+            // Simulate different status codes
+            fetch(`https://httpstat.us/${statusCode}`)
+                .then(response => {
+                    if (response.ok) {
+                        response.text().then(text => {
+                            responseDiv.className += ' success';
+                            responseDiv.innerHTML = `Status Code: ${response.status} - ${response.statusText}<br>${text}`;
+                        });
+                    } else {
+                        response.text().then(text => {
+                            responseDiv.className += ' error';
+                            responseDiv.innerHTML = `Status Code: ${response.status} - ${response.statusText}<br>${text}`;
+                        });
+                    }
+                })
+                .catch(error => {
+                    responseDiv.className += ' error';
+                    responseDiv.innerHTML = `An error occurred: ${error.message}`;
+                });
+        }
+    </script>
+</body>
+</html>
